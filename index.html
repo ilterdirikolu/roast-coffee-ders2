@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roast Coffee House | Modern CSS Masterclass</title>
+    <!-- Modern İkonlar -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Modern Fontlar: Inter & Playfair Display -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        /* --- 1. AYARLAR & CSS DEĞİŞKENLERİ --- */
+        :root {
+            --primary: #C85A17; /* Sofistike Kiremit Rengi */
+            --primary-dark: #A04510;
+            --accent: #FCE4C4;  /* Yumuşak Krem Vurgu */
+            --dark: #1A1A1A;    /* Kömür Siyahı */
+            --bg-soft: #FAF9F7; /* Çok Hafif Kirli Beyaz */
+            --white: #ffffff;
+            --shadow-sm: 0 4px 20px rgba(0,0,0,0.06);
+            --shadow-lg: 0 20px 40px rgba(0,0,0,0.1);
+            --gray-text: #666666;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-soft); 
+            color: var(--dark);
+            line-height: 1.7;
+        }
+
+        h1, h2, h3, h4, h5, h6, .logo {
+            font-family: 'Playfair Display', serif;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* --- 2. NAVBAR (GLASSMORPHISM) --- */
+        .navbar {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            padding: 1.2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: -0.5px;
+        }
+        .logo i { color: var(--primary); }
+
+        #nav-toggle { display: none; }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 1rem;
+            position: relative;
+            padding: 5px 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            bottom: -5px;
+            left: 0;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .nav-links a:hover::after { width: 100%; }
+
+        .btn-order {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px -5px rgba(200, 90, 23, 0.4);
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-order:hover { 
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px -5px rgba(200, 90, 23, 0.5);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn-hero-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 16px 45px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-hero-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(200, 90, 23, 0.4);
+        }
+
+        .btn-hero-secondary {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 16px 45px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border: 2px solid rgba(255,255,255,0.8); /* Çerçeve biraz daha belirgin yapıldı */
+            transition: all 0.3s;
+        }
+
+        .btn-hero-secondary:hover {
+            background-color: white;
+            color: var(--primary);
+            border-color: white;
+            transform: translateY(-3px);
+        }
+
+        .hamburger-label {
+            display: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--dark);
+        }
+
+        @media (max-width: 768px) {
+            .hamburger-label { display: block; }
+            .btn-order { display: none; }
+
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(255, 255, 255, 0.98);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                align-items: center;
+                padding: 40px 0;
+                gap: 30px;
+                box-shadow: var(--shadow-lg);
+                transform: scaleY(0);
+                transform-origin: top;
+                transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                border-bottom: 1px solid rgba(0,0,0,0.05);
+            }
+
+            #nav-toggle:checked ~ .nav-links {
+                transform: scaleY(1);
+            }
+        }
+
+        /* --- 4. HERO SECTION (GÜNCELLENDİ: Önceki Ferah Arka Plan) --- */
+        .hero {
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            /* ÖNCEKİ FOTOĞRAF: Daha sıcak ve aydınlık kahve dükkanı atmosferi */
+            background: 
+                linear-gradient(rgba(45, 52, 54, 0.6), rgba(45, 52, 54, 0.4)),
+                url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1600') 
+                center/cover no-repeat fixed;
+            color: white;
+        }
+
+        /* --- 5. TEXT CLIP (GÜNCELLENDİ: Yeni Kahve Dokusu) --- */
+        .hero-title {
+            font-size: clamp(4rem, 12vw, 10rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            line-height: 1;
+            /* YENİ TEXTURE: Altın sarısı, net kavrulmuş çekirdekler */
+            background-image: url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=1000&q=80');
+            background-size: cover;
+            background-position: center;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            /* Gölgeyi biraz yumuşattık ki yazı daha net okunsun */
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3)); 
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            letter-spacing: 3px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+        }
+
+        /* --- 6. MİNİMALİST KARTLAR & GRID --- */
+        .menu-section {
+            padding: 100px 5%;
+            margin-top: -80px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            color: var(--dark);
+            margin-bottom: 60px;
+            font-weight: 900;
+        }
+        .section-title span { 
+            color: var(--primary);
+            position: relative;
+        }
+        .section-title span::after {
+            content: '';
+            position: absolute;
+            width: 60%;
+            height: 4px;
+            background: var(--accent);
+            bottom: 10px;
+            left: 0;
+            z-index: -1;
+            border-radius: 10px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .card:hover { 
+            transform: translateY(-15px); 
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            object-position: center;
+            transition: transform 0.4s ease;
+        }
+        .card:hover .card-img { transform: scale(1.05); }
+
+        .card-content { padding: 35px; }
+        
+        .price {
+            float: right;
+            font-weight: 800;
+            color: var(--primary);
+            font-size: 1.4rem;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        /* --- 7. BARİSTALAR --- */
+        .team-section {
+            background-color: var(--white);
+            padding: 100px 5%;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .team-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 50px;
+            margin-top: 60px;
+        }
+
+        .member {
+            text-align: center;
+        }
+
+        .member img {
+            width: 180px;
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: top;
+            border: 5px solid var(--white);
+            box-shadow: 0 0 0 4px var(--primary), var(--shadow-lg);
+            margin-bottom: 25px;
+            transition: transform 0.4s;
+        }
+        
+        .member:hover img { transform: scale(1.08); }
+        
+        .member h3 { font-size: 1.4rem; margin-bottom: 5px; }
+
+        /* --- 8. İLETİŞİM & LOKASYON --- */
+        .contact-section {
+            padding: 100px 5%;
+            background-color: var(--bg-soft);
+        }
+        
+        .contact-title span {
+            background-image: linear-gradient(45deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 40px;
+            background: var(--white);
+            padding: 30px;
+            border-radius: 40px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .contact-visual {
+            position: relative;
+            border-radius: 30px;
+            overflow: hidden;
+            min-height: 450px;
+        }
+
+        .status-badge {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            color: var(--primary);
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 700;
+            box-shadow: var(--shadow-sm);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .map-frame {
+            width: 100%;
+            height: 100%;
+            min-height: 450px;
+            border-radius: 30px;
+            border: none;
+        }
+
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .info-card {
+            background: white;
+            padding: 30px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s;
+        }
+        .info-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+
+        .info-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent), #fff);
+            color: var(--primary);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* --- 9. FOOTER --- */
+        .footer {
+            background-color: var(--dark);
+            color: #dfe6e9;
+            margin-top: 0;
+            position: relative;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .footer-cta {
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+            padding: 80px 5% 60px;
+            text-align: center;
+            color: white;
+            clip-path: polygon(0 0, 100% 40px, 100% 100%, 0 100%);
+            margin-top: -40px;
+        }
+
+        .footer-cta h2 { 
+            margin-bottom: 15px;
+            font-size: 2.5rem;
+        }
+        
+        .cta-buttons {
+            margin-top: 30px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .btn-white {
+            background: white;
+            color: var(--primary);
+            padding: 14px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: 0.3s;
+            box-shadow: var(--shadow-sm);
+        }
+        .btn-white:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+
+        .footer-content {
+            padding: 80px 5% 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 60px;
+        }
+
+        .footer-col h3 {
+            color: white;
+            margin-bottom: 25px;
+            font-size: 1.3rem;
+            position: relative;
+            display: inline-block;
+        }
+        .footer-col h3::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 3px;
+            background: var(--primary);
+            bottom: -8px;
+            left: 0;
+        }
+
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a {
+            color: var(--gray-text);
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        .footer-links a:hover { color: var(--primary); transform: translateX(5px); }
+
+        .social-icons {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+        .social-btn {
+            width: 45px;
+            height: 45px;
+            background: rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+            transition: 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .social-btn:hover { 
+            background: var(--primary); 
+            transform: translateY(-3px);
+            border-color: var(--primary);
+        }
+
+        .copyright {
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.95rem;
+            color: var(--gray-text);
+        }
+
+        @media (max-width: 768px) {
+            .contact-grid { grid-template-columns: 1fr; }
+            .hero-title { font-size: 15vw; }
+            .footer-cta { clip-path: polygon(0 0, 100% 20px, 100% 100%, 0 100%); margin-top: -20px; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-coffee"></i> ROAST.
+        </div>
+
+        <input type="checkbox" id="nav-toggle">
+        
+        <ul class="nav-links">
+            <li><a href="#">Ana Sayfa</a></li>
+            <li><a href="#">Menü</a></li>
+            <li><a href="#">Hikayemiz</a></li>
+            <li><a href="#">İletişim</a></li>
+        </ul>
+
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <a href="#" class="btn-order">Sipariş Ver</a>
+            
+            <label for="nav-toggle" class="hamburger-label">
+                <i class="fas fa-bars-staggered"></i>
+            </label>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <header class="hero">
+        <h1 class="hero-title">ROAST</h1>
+        <p>Şehrin Kalbinde, Kahvenin Zirvesinde.</p>
+        <div class="hero-buttons">
+            <a href="#" class="btn-hero-primary">Keşfetmeye Başla <i class="fas fa-arrow-right" style="margin-left: 10px; font-size: 0.9em;"></i></a>
+            <a href="#" class="btn-hero-secondary">Menüyü İncele</a>
+        </div>
+    </header>
+
+    <!-- MENÜ KARTLARI -->
+    <section class="menu-section">
+        <h2 class="section-title">Özel <span>Seçimler</span></h2>
+        
+        <div class="card-grid">
+            <article class="card">
+                <img src="https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&w=600&q=80" alt="Espresso" class="card-img" loading="lazy">
+                <div class="card-content">
+                    <span class="price">₺80</span>
+                    <h3>Signature Espresso</h3>
+                    <p style="color: #666; font-size: 0.95rem;">Yoğun gövdeli, zengin aromalı. Güne güçlü bir başlangıç için özel harman.</p>
+                </div>
+            </article>
+
+            <article class="card">
+                <img src="https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=600&q=80" alt="Latte" class="card-img" loading="lazy">
+                <div class="card-content">
+                    <span class="price">₺95</span>
+                    <h3>Salted Caramel Latte</h3>
+                    <p style="color: #666; font-size: 0.95rem;">Ev yapımı tuzlu karamel sosu ve kadifemsi süt köpüğünün mükemmel uyumu.</p>
+                </div>
+            </article>
+
+            <article class="card">
+                <img src="https://unsplash.com/photos/T5vT4VFp4UM/download?force=true&w=640" alt="Kruvasan" class="card-img" loading="lazy">
+                <div class="card-content">
+                    <span class="price">₺60</span>
+                    <h3>Parisian Croissant</h3>
+                    <p style="color: #666; font-size: 0.95rem;">Gerçek tereyağı ile hazırlanmış, kat kat ve çıtır Fransız klasiği.</p>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <!-- EKİP (BARISTALAR) -->
+    <section class="team-section">
+        <h2 class="section-title">Kahve <span>Ustalarımız</span></h2>
+        <div class="team-container">
+            <div class="member">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80" alt="Barista 1" loading="lazy">
+                <h3>Emre Can</h3>
+                <small style="color: var(--primary); font-weight: 600;">Head Barista & Roaster</small>
+            </div>
+            
+            <div class="member">
+                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&q=80" alt="Barista 2" loading="lazy">
+                <h3>Selin Yılmaz</h3>
+                <small style="color: var(--primary); font-weight: 600;">Latte Art Specialist</small>
+            </div>
+            
+            <div class="member">
+                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80" alt="Barista 3" loading="lazy">
+                <h3>Burak Demir</h3>
+                <small style="color: var(--primary); font-weight: 600;">Brewing Expert</small>
+            </div>
+        </div>
+    </section>
+
+    <!-- İLETİŞİM & LOKASYON -->
+    <section class="contact-section">
+        <h2 class="contact-title">Bize <span>Ulaşın</span></h2>
+        
+        <div class="contact-grid">
+            <div class="contact-visual">
+                <div class="status-badge">
+                    <i class="fas fa-clock"></i> Bugün 22:00'a Kadar Açık
+                </div>
+                <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80" alt="Kahve Dükkanı İçi" class="contact-img">
+            </div>
+            
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3125.568497672528!2d27.13837907578763!3d38.42861567182655!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14bbd862a762cacd%3A0xf6241285cb8040a6!2zSGF2cmEgU29rYWfEsQ!5e0!3m2!1str!2str!4v1714567890000!5m2!1str!2str" 
+                class="map-frame" allowfullscreen="" loading="lazy" style="filter: grayscale(0.2) contrast(1.2);"></iframe>
+            </div>
+        </div>
+
+        <div class="info-cards">
+            <div class="info-card">
+                <div class="info-icon"><i class="fas fa-map-pin"></i></div>
+                <div>
+                    <h4 style="font-family: 'Playfair Display', serif; font-size: 1.2rem;">Adresimiz</h4>
+                    <p style="font-size: 0.95rem; color: #666;">Alsancak, Kordon Boyu No:45<br>İzmir, Türkiye</p>
+                </div>
+            </div>
+            <div class="info-card">
+                <div class="info-icon"><i class="fas fa-phone-volume"></i></div>
+                <div>
+                    <h4 style="font-family: 'Playfair Display', serif; font-size: 1.2rem;">Telefon</h4>
+                    <p style="font-size: 0.95rem; color: #666;">0232 444 55 66<br>Rezervasyon & Sipariş</p>
+                </div>
+            </div>
+            <div class="info-card">
+                <div class="info-icon"><i class="fas fa-envelope-open-text"></i></div>
+                <div>
+                    <h4 style="font-family: 'Playfair Display', serif; font-size: 1.2rem;">E-Posta</h4>
+                    <p style="font-size: 0.95rem; color: #666;">info@roastcoffee.com<br>Kurumsal İletişim</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-cta">
+            <h2>Kahve Tutkusunu Eve Taşıyın.</h2>
+            <p>Online mağazamızdan taze kavrulmuş çekirdeklerimizi sipariş edin.</p>
+            <div class="cta-buttons">
+                <a href="#" class="btn-white"><i class="fas fa-shopping-bag" style="margin-right: 8px;"></i> Mağazaya Git</a>
+                <a href="#" class="btn-white" style="background: transparent; color: white; border: 2px solid white;"><i class="fas fa-phone" style="margin-right: 8px;"></i> Bizi Arayın</a>
+            </div>
+        </div>
+
+        <div class="footer-content">
+            <div class="footer-col">
+                <div class="logo" style="margin-bottom: 25px; color: white;">
+                    <i class="fas fa-coffee"></i> ROAST.
+                </div>
+                <p style="color: var(--gray-text); margin-bottom: 25px; font-size: 0.95rem;">
+                    2010'dan beri İzmir'in en nitelikli kahve deneyimini sunuyoruz. Tutkumuz, bardağınızdaki her yudumda.
+                </p>
+                <div style="color: #FCE4C4; display: flex; align-items: center;">
+                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    <span style="color: white; margin-left: 10px; font-weight: 600;">4.9/5 (Google Puanı)</span>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h3>Hızlı Bağlantılar</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Ana Sayfa</a></li>
+                    <li><a href="#">Güncel Menü</a></li>
+                    <li><a href="#">Kahve Aboneliği</a></li>
+                    <li><a href="#">Blog & Haberler</a></li>
+                    <li><a href="#">Kariyer Fırsatları</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>İletişim Bilgileri</h3>
+                <ul class="contact-list" style="list-style: none;">
+                    <li><i class="fas fa-map-marker-alt" style="color: var(--primary);"></i> Alsancak, 35220 İzmir</li>
+                    <li><i class="fas fa-phone" style="color: var(--primary);"></i> 0232 444 55 66</li>
+                    <li><i class="fas fa-clock" style="color: var(--primary);"></i> Pzt-Paz: 08:00 - 00:00</li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h3>Bizi Takip Edin</h3>
+                <p style="color: var(--gray-text); margin-bottom: 20px; font-size: 0.9rem;">En yeni kahvelerimiz ve etkinliklerimizden haberdar olun.</p>
+                <div class="social-icons">
+                    <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="copyright">
+            <p>&copy; 2025 Roast Coffee House. Tüm hakları saklıdır. | <a href="#" style="color: var(--primary); text-decoration: none;">Gizlilik Politikası</a></p>
+        </div>
+    </footer>
+
+</body>
+</html>
